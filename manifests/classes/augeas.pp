@@ -7,6 +7,7 @@ class augeas {
   case $operatingsystem {
     /RedHat|CentOS|Fedora/:   { include augeas::redhat }
     /Debian|Ubuntu|kFreeBSD/: { include augeas::debian }
+    /Gentoo/:                 { include augeas::gentoo }
     default:                  { include augeas::base }
   }
 }
@@ -45,4 +46,12 @@ class augeas::debian inherits augeas::base {
   }
   package { "libaugeas-ruby1.8": ensure => present }
 
+}
+
+class augeas::gentoo inherits augeas::base {
+  package { "augeas":
+    ensure => $augeas_version,
+    before => File["/usr/share/augeas/lenses/contrib"]
+  }
+  package { "ruby-augeas": ensure => present }
 }
